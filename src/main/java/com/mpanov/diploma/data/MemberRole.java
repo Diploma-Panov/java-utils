@@ -1,6 +1,7 @@
 package com.mpanov.diploma.data;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -8,6 +9,7 @@ import java.util.Set;
 import static com.mpanov.diploma.data.MemberPermission.*;
 import static java.util.Set.of;
 
+@Getter
 @AllArgsConstructor
 public enum MemberRole {
     ORGANIZATION_OWNER(of(MemberRoleScope.URL_SHORTENER), EnumSet.allOf(MemberPermission.class)),
