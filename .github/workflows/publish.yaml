@@ -1,0 +1,85 @@
+name: Increment Version and Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: 'Version type (major, minor, patch)'
+        required: true
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+
+jobs:
+  increment-version:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Java and Maven
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
+
+      - name: Get current version
+        id: current_version
+        run: |
+          VERSION=$(xmllint --xpath "string(//project/version)" pom.xml)
+          echo "Current version: $VERSION"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Calculate new version
+        id: new_version
+        run: |
+          OLD_VERSION=${{ env.VERSION }}
+          IFS='.' read -r -a PARTS <<< "$OLD_VERSION"
+          case "${{ github.event.inputs.version_type }}" in
+            major)
+              ((PARTS[0]++))
+              PARTS[1]=0
+              PARTS[2]=0
+              ;;
+            minor)
+              ((PARTS[1]++))
+              PARTS[2]=0
+              ;;
+            patch)
+              ((PARTS[2]++))
+              ;;
+          esac
+          NEW_VERSION="${PARTS[0]}.${PARTS[1]}.${PARTS[2]}"
+          echo "New version: $NEW_VERSION"
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+
+      - name: Update pom.xml with new version
+        run: |
+          xmlstarlet ed -L -u "//project/version" -v "$NEW_VERSION" pom.xml
+
+      - name: Authenticate with CodeArtifact
+        run: |
+          export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain mpanov --domain-owner 533267200006 --region eu-central-1 --query authorizationToken --output text)
+          echo "CODEARTIFACT_AUTH_TOKEN=$CODEARTIFACT_AUTH_TOKEN" >> $GITHUB_ENV
+
+      - name: Setup Maven settings.xml
+        run: cp ./ci/settings.xml.example ./settings.xml
+
+      - name: Deploy package
+        run: mvn deploy -s settings.xml
+        env:
+          CODEARTIFACT_AUTH_TOKEN: ${{ env.CODEARTIFACT_AUTH_TOKEN }}
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "github-actions@github.com"
+          git add pom.xml
+          git commit -m "Publish new package version - $NEW_VERSION"
+          git push origin HEAD
