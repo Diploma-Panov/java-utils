@@ -42,21 +42,8 @@ jobs:
       - name: Calculate new version
         id: new_version
         run: |
-          if [ -z "${{ env.VERSION }}" ]; then
-            echo "Error: VERSION is empty. Exiting."
-            exit 1
-          fi
-          
           OLD_VERSION=${{ env.VERSION }}
-          echo "Extracted version: $OLD_VERSION"
-          
           IFS='.' read -r -a PARTS <<< "$OLD_VERSION"
-          
-          if [ ${#PARTS[@]} -ne 3 ]; then
-            echo "Error: VERSION format is incorrect ($OLD_VERSION). Expected format: X.Y.Z"
-            exit 1
-          fi
-          
           case "${{ github.event.inputs.version_type }}" in
             major)
               ((PARTS[0]++))
@@ -70,12 +57,7 @@ jobs:
             patch)
               ((PARTS[2]++))
               ;;
-            *)
-              echo "Error: Invalid version type"
-              exit 1
-              ;;
           esac
-          
           NEW_VERSION="${PARTS[0]}.${PARTS[1]}.${PARTS[2]}"
           echo "New version: $NEW_VERSION"
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
