@@ -35,7 +35,7 @@ jobs:
       - name: Get current version
         id: current_version
         run: |
-          VERSION=$(xmlstarlet sel -t -v "//project/version" pom.xml)
+          VERSION=$(xmlstarlet sel -N ns="http://maven.apache.org/POM/4.0.0" -t -v "//ns:project/ns:version" pom.xml)
           echo "Current version: $VERSION"
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
@@ -64,7 +64,7 @@ jobs:
 
       - name: Update pom.xml with new version
         run: |
-          xmlstarlet ed -L -u "//project/version" -v "$NEW_VERSION" pom.xml
+          xmlstarlet ed -L -N ns="http://maven.apache.org/POM/4.0.0" -u "//ns:project/ns:version" -v "$NEW_VERSION" pom.xml
 
       - name: Authenticate with CodeArtifact
         run: |
