@@ -51,16 +51,12 @@ jobs:
 
       - name: Authenticate with CodeArtifact
         run: |
-          export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain mpanov --query authorizationToken --output text)
+          CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain mpanov --query authorizationToken --output text --region ${{ secrets.AWS_DEFAULT_REGION }})
           echo "CODEARTIFACT_AUTH_TOKEN=$CODEARTIFACT_AUTH_TOKEN" >> $GITHUB_ENV
+        shell: bash
 
       - name: Setup Maven settings.xml
         run: cp ./ci/settings.xml.example ./settings.xml
-
-      - name: Check env
-        run: |
-          echo ${{ env.CODEARTIFACT_AUTH_TOKEN }}
-          aws codeartifact list-repositories --region ${{ env.CODEARTIFACT_AUTH_TOKEN }}
 
       - name: Deploy package
         run: mvn deploy -s settings.xml
