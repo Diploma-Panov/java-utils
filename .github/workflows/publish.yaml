@@ -73,5 +73,5 @@ jobs:
           git config --global user.name "GitHub Actions"
           git config --global user.email "github-actions@github.com"
           git add pom.xml
-          git commit -m "Bump version to $NEW_VERSION"
+          git commit -m "Bump version to ${{ env.NEW_VERSION }}"
           git push origin HEAD

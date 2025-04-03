@@ -52,6 +52,7 @@ echo "Patch result - $PATCH"
 
 NEW_VERSION="$MAJOR.$MINOR.$PATCH"
 echo "NEW_VERSION is $NEW_VERSION"
+echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
 
 echo "Updating version to $NEW_VERSION"
 mvn versions:set -DnewVersion=$NEW_VERSION
