@@ -8,8 +8,10 @@ if [[ -z "$VERSION_TYPE" ]]; then
   echo "Error: No version type provided (expected 'major', 'minor', or 'patch')"
   exit 1
 fi
+echo "Update type: $VERSION_TYPE"
 
 VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+echo "Current version: $VERSION"
 
 if [[ "$VERSION" =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
   MAJOR=${BASH_REMATCH[1]}
@@ -22,15 +24,18 @@ fi
 
 case "$VERSION_TYPE" in
   major)
+    echo "Major version definition"
     ((MAJOR++))
     MINOR=0
     PATCH=0
     ;;
   minor)
+    echo "Minor version definition"
     ((MINOR++))
     PATCH=0
     ;;
   patch)
+    echo "Patch version definition"
     ((PATCH++))
     ;;
   *)
