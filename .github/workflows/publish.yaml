@@ -40,7 +40,7 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: Increment version using Maven Versions Plugin
-        run: ./ci/publish.sh
+        run: ./ci/publish.sh "${{ github.event.inputs.version_type }}"
 
       - name: Authenticate with CodeArtifact
         run: |
