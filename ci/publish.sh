@@ -32,7 +32,9 @@ case "$VERSION_TYPE" in
   minor)
     echo "Minor version definition"
     ((MINOR++))
+    echo "Test incremented minor: $MINOR"
     PATCH=0
+    echo "Test zero patch: $PATCH"
     ;;
   patch)
     echo "Patch version definition"
@@ -44,8 +46,15 @@ case "$VERSION_TYPE" in
     ;;
 esac
 
+echo "Major result - $MAJOR"
+echo "Minor result - $MINOR"
+echo "Patch result - $PATCH"
+
 NEW_VERSION="$MAJOR.$MINOR.$PATCH"
+echo "NEW_VERSION is $NEW_VERSION"
 
 echo "Updating version to $NEW_VERSION"
 mvn versions:set -DnewVersion=$NEW_VERSION
+echo "Set version - SUCCESS"
 mvn versions:commit
+echo "Version commit - SUCCESS"
