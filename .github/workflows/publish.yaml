@@ -39,32 +39,8 @@ jobs:
           echo "Current version: $VERSION"
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-      - name: Calculate new version
-        id: new_version
-        run: |
-          OLD_VERSION=${{ env.VERSION }}
-          echo "New version: $OLD_VERSION"
-          echo "NEW_VERSION=$OLD_VERSION" >> $GITHUB_ENV
-#          IFS='.' read -r -a PARTS <<< "$OLD_VERSION"
-#          case "${{ github.event.inputs.version_type }}" in
-#            major)
-#              ((PARTS[0]++))
-#              PARTS[1]=0
-#              PARTS[2]=0
-#              ;;
-#            minor)
-#              ((PARTS[1]++))
-#              PARTS[2]=0
-#              ;;
-#            patch)
-#              ((PARTS[2]++))
-#              ;;
-#          esac
-#          NEW_VERSION="${PARTS[0]}.${PARTS[1]}.${PARTS[2]}"
-
-      - name: Update pom.xml with new version
-        run: |
-          xmlstarlet ed -L -N ns="http://maven.apache.org/POM/4.0.0" -u "//ns:project/ns:version" -v "$NEW_VERSION" pom.xml
+      - name: Increment version using Maven Versions Plugin
+        run: ./ci/publish.sh
 
       - name: Authenticate with CodeArtifact
         run: |
