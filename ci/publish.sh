@@ -25,20 +25,20 @@ fi
 case "$VERSION_TYPE" in
   major)
     echo "Major version definition"
-    ((MAJOR++))
+    MAJOR=$((MAJOR + 1))
     MINOR=0
     PATCH=0
     ;;
   minor)
     echo "Minor version definition"
-    ((MINOR++))
+    MINOR=$((MINOR + 1))
     echo "Test incremented minor: $MINOR"
     PATCH=0
     echo "Test zero patch: $PATCH"
     ;;
   patch)
     echo "Patch version definition"
-    ((PATCH++))
+    PATCH=$((PATCH + 1))
     ;;
   *)
     echo "Invalid version type: $VERSION_TYPE (expected 'major', 'minor', or 'patch')"
