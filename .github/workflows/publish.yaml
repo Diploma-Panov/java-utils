@@ -57,6 +57,11 @@ jobs:
       - name: Setup Maven settings.xml
         run: cp ./ci/settings.xml.example ./settings.xml
 
+      - name: Check env
+        run: |
+          echo ${{ env.CODEARTIFACT_AUTH_TOKEN }}
+          aws codeartifact list-repositories --region ${{ env.CODEARTIFACT_AUTH_TOKEN }}
+
       - name: Deploy package
         run: mvn deploy -s settings.xml
         env:
