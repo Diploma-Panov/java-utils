@@ -15,11 +15,13 @@ public enum ServiceErrorType {
     ORGANIZATION_ACTION_NOT_ALLOWED,
     ENTITY_NOT_FOUND,
     FORM_VALIDATION_FAILED,
-    INTERNAL_ERROR;
+    INTERNAL_ERROR,
+    PASSWORD_IS_NOT_COMPLIANT;
 
    public static ServiceErrorType fromSignupErrorType(SignupErrorType signupErrorType) {
        return switch (signupErrorType) {
            case INVALID_EMAIL_FORMAT -> EMAIL_IS_INVALID;
+           case NON_COMPLIANT_PASSWORD -> PASSWORD_IS_NOT_COMPLIANT;
        };
    }
 }
