@@ -16,7 +16,8 @@ public enum ServiceErrorType {
     ENTITY_NOT_FOUND,
     FORM_VALIDATION_FAILED,
     INTERNAL_ERROR,
-    PASSWORD_IS_NOT_COMPLIANT;
+    PASSWORD_IS_NOT_COMPLIANT,
+    SHORT_CODE_EXPIRED;
 
    public static ServiceErrorType fromSignupErrorType(SignupErrorType signupErrorType) {
        return switch (signupErrorType) {
