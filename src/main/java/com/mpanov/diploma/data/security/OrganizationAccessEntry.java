@@ -1,6 +1,5 @@
 package com.mpanov.diploma.data.security;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.mpanov.diploma.data.MemberRole;
 import lombok.*;
 
@@ -13,7 +12,6 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class OrganizationAccessEntry implements Serializable {
 
